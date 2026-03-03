@@ -1,0 +1,29 @@
+# Credentials & Secrets (NEVER commit these)
+credentials.json
+service-account.json
+*.pem
+*.key
+*.secret
+.env
+.env.local
+oauth-screenshot.png
+
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.egg-info/
+
+# Local environment
+.DS_Store
+.vscode/
+*.log
+*.pid
+
+# Database files (optional - uncomment to exclude)
+# *.db
+# *.sqlite
+
+# Temporary files
+.tmp/
+temp/
