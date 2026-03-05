@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Orchestrator Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header/Navigation -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🤖 Agent Orchestrator</h1>
+                <div class="header-right">
+                    <div class="status-badge" id="systemStatus">
+                        <span class="status-dot online"></span>
+                        <span>System Online</span>
+                    </div>
+                    <div class="time-display" id="timeDisplay">--:--:--</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <ul class="nav-links">
+                <li><a href="#overview" class="nav-link active" data-section="overview">📊 Overview</a></li>
+                <li><a href="#approval-queue" class="nav-link" data-section="approval-queue">✋ Approval Queue</a></li>
+                <li><a href="#run-history" class="nav-link" data-section="run-history">📜 Run History</a></li>
+                <li><a href="#agents" class="nav-link" data-section="agents">🎯 Agents</a></li>
+                <li><a href="#activity" class="nav-link" data-section="activity">⚡ Live Activity</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Overview Section -->
+            <section id="overview" class="section active">
+                <h2>Dashboard Overview</h2>
+                
+                <!-- Metrics Cards -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">🤖</div>
+                        <div class="metric-content">
+                            <h3>Active Agents</h3>
+                            <p class="metric-value" id="activeAgents">2</p>
+                            <span class="metric-label">Running now</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">✋</div>
+                        <div class="metric-content">
+                            <h3>Pending Approvals</h3>
+                            <p class="metric-value" id="pendingApprovals">3</p>
+                            <span class="metric-label">Awaiting review</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">📈</div>
+                        <div class="metric-content">
+                            <h3>Total Runs</h3>
+                            <p class="metric-value" id="totalRuns">47</p>
+                            <span class="metric-label">This month</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">✅</div>
+                        <div class="metric-content">
+                            <h3>Success Rate</h3>
+                            <p class="metric-value" id="successRate">94%</p>
+                            <span class="metric-label">Last 30 days</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <h3>Agent Performance (Last 7 Days)</h3>
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Run Status Distribution</h3>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Agents Status Cards -->
+                <div class="agents-status">
+                    <h3>Agent Status</h3>
+                    <div class="agent-cards">
+                        <div class="agent-card">
+                            <div class="agent-header">
+                                <h4>Google Ads Manager</h4>
+                                <span class="status-badge status-running">
+                                    <span class="status-dot online"></span> Running
+                                </span>
+                            </div>
+                            <div class="agent-stats">
+                                <div class="stat">
+                                    <span class="label">Last Run:</span>
+                                    <span class="value">2 hours ago</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="label">Runs (Today):</span>
+                                    <span class="value">3</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="label">Success Rate:</span>
+                                    <span class="value">100%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="agent-card">
+                            <div class="agent-header">
+                                <h4>Crypto Trading Bot</h4>
+                                <span class="status-badge status-running">
+                                    <span class="status-dot online"></span> Running
+                                </span>
+                            </div>
+                            <div class="agent-stats">
+                                <div class="stat">
+                                    <span class="label">Last Run:</span>
+                                    <span class="value">15 minutes ago</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="label">Runs (Today):</span>
+                                    <span class="value">12</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="label">Success Rate:</span>
+                                    <span class="value">92%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Approval Queue Section -->
+            <section id="approval-queue" class="section">
+                <h2>Approval Queue</h2>
+                <div class="table-controls">
+                    <input type="text" id="filterInput" class="filter-input" placeholder="Filter by agent or type...">
+                    <select id="statusFilter" class="status-filter">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Agent</th>
+                                <th>Type</th>
+                                <th>Proposal</th>
+                                <th>Created</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approvalTableBody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Run History Section -->
+            <section id="run-history" class="section">
+                <h2>Run History</h2>
+                <div class="table-controls">
+                    <input type="text" id="historyFilterInput" class="filter-input" placeholder="Filter by agent or status...">
+                    <select id="historyStatusFilter" class="status-filter">
+                        <option value="">All Status</option>
+                        <option value="success">Success</option>
+                        <option value="failed">Failed</option>
+                        <option value="running">Running</option>
+                    </select>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Run ID</th>
+                                <th>Agent</th>
+                                <th>Started</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Result</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Agents Section -->
+            <section id="agents" class="section">
+                <h2>Agent Management</h2>
+                <div class="agents-grid">
+                    <div class="agent-detail-card">
+                        <h3>Google Ads Manager</h3>
+                        <div class="agent-info">
+                            <div class="info-group">
+                                <span class="label">Status:</span>
+                                <span class="value">
+                                    <span class="status-dot online"></span> Active
+                                </span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">Uptime:</span>
+                                <span class="value">99.8%</span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">Last Run:</span>
+                                <span class="value">2 hours ago</span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">Next Run:</span>
+                                <span class="value">4 hours from now</span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">API Calls:</span>
+                                <span class="value">1,234 / 10,000</span>
+                            </div>
+                        </div>
+                        <div class="agent-actions">
+                            <button class="btn btn-primary">Trigger Run</button>
+                            <button class="btn btn-secondary">View Logs</button>
+                        </div>
+                    </div>
+
+                    <div class="agent-detail-card">
+                        <h3>Crypto Trading Bot</h3>
+                        <div class="agent-info">
+                            <div class="info-group">
+                                <span class="label">Status:</span>
+                                <span class="value">
+                                    <span class="status-dot online"></span> Active
+                                </span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">Uptime:</span>
+                                <span class="value">98.9%</span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">Last Run:</span>
+                                <span class="value">15 minutes ago</span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">Next Run:</span>
+                                <span class="value">5 minutes from now</span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">Portfolio Value:</span>
+                                <span class="value">$24,567.89</span>
+                            </div>
+                        </div>
+                        <div class="agent-actions">
+                            <button class="btn btn-primary">Trigger Run</button>
+                            <button class="btn btn-secondary">View Logs</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Activity Section -->
+            <section id="activity" class="section">
+                <h2>Live Activity Feed</h2>
+                <div class="activity-controls">
+                    <select id="activityFilter" class="status-filter">
+                        <option value="">All Activities</option>
+                        <option value="agent">Agent Actions</option>
+                        <option value="approval">Approvals</option>
+                        <option value="error">Errors</option>
+                    </select>
+                    <button id="clearActivityBtn" class="btn btn-secondary btn-sm">Clear Feed</button>
+                </div>
+                <div class="activity-feed" id="activityFeed">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal for Details -->
+        <div id="detailsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Details</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Content populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
