@@ -231,7 +231,7 @@ If: Campaign impression_share < 50%
 **Execution Guardrails:**
 - Max changes per client per day: 20 (prevent accidents)
 - Pause no more than 30% of ad groups in a campaign
-- Don't increase budget >25% in one day
+- Don't increase or decrease budget >20% in one day
 - Never delete campaigns (pause only)
 - Log every single change with reason + timestamp
 
